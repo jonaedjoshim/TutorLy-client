@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Alert, Badge, Button, Skeleton } from '../components/ui';
 import { tutorAPI } from '../api/tutors';
+import { reviewAPI } from '../api/reviews';
 import { getErrorMessage } from '../api/client';
 
 export default function TutorProfilePage() {
   const { id } = useParams();
   const [profile, setProfile] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -16,8 +18,16 @@ export default function TutorProfilePage() {
 
     tutorAPI
       .getById(id)
-      .then((response) => {
-        if (active) setProfile(response.data.profile);
+      .then(async (response) => {
+        if (!active) return;
+        setProfile(response.data.profile);
+
+        try {
+          const reviewResponse = await reviewAPI.list(response.data.profile.user?._id);
+          if (active) setReviews(reviewResponse.data.data);
+        } catch {
+          if (active) setReviews([]);
+        }
       })
       .catch((err) => {
         if (active) setError(getErrorMessage(err, 'Could not load this tutor.'));
@@ -119,6 +129,27 @@ export default function TutorProfilePage() {
               ))
             ) : (
               <p className="text-sm text-muted">Not listed yet.</p>
+            )}
+          </div>
+
+          <div className="mt-9 border-t border-line pt-7">
+            <h2 className="text-2xl text-ink">What students say</h2>
+            {reviews.length === 0 ? (
+              <p className="mt-4 text-sm text-muted">No reviews yet. Feedback appears here after a confirmed tuition.</p>
+            ) : (
+              <ul className="mt-5 divide-y divide-line">
+                {reviews.map((review) => (
+                  <li key={review._id} className="py-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="text-sm font-semibold text-ink">{review.student?.name || 'Student'}</p>
+                      <span className="rounded-full bg-teal-light px-2.5 py-1 text-xs font-bold text-teal-dark">
+                        {review.rating}/5
+                      </span>
+                    </div>
+                    {review.comment && <p className="mt-2 text-sm leading-6 text-muted">“{review.comment}”</p>}
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
         </section>

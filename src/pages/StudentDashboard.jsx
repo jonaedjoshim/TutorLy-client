@@ -6,6 +6,7 @@ import { Alert, Badge, Button, Card, EmptyState, Input, Skeleton, Spinner } from
 import { postAPI } from '../api/posts';
 import { applicationAPI } from '../api/applications';
 import { authAPI } from '../api/auth';
+import { reviewAPI } from '../api/reviews';
 import { getErrorMessage } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
@@ -33,6 +34,9 @@ export default function StudentDashboard() {
   const [actionId, setActionId] = useState(null);
   const [profile, setProfile] = useState({ name: '', phone: '', location: '', bio: '' });
   const [savingProfile, setSavingProfile] = useState(false);
+  const [ratingFor, setRatingFor] = useState(null);
+  const [ratingValue, setRatingValue] = useState(5);
+  const [ratingComment, setRatingComment] = useState('');
 
   useEffect(() => {
     let activeRequest = true;
@@ -101,6 +105,22 @@ export default function StudentDashboard() {
       toast.success('Request removed.');
     } catch (err) {
       toast.error(getErrorMessage(err, 'Could not remove the request.'));
+    }
+  };
+
+  const handleReview = async (event, tutorId) => {
+    event.preventDefault();
+    setActionId(tutorId);
+
+    try {
+      await reviewAPI.create({ tutorId, rating: Number(ratingValue), comment: ratingComment });
+      setRatingFor(null);
+      setRatingComment('');
+      toast.success('Thanks for sharing your experience.');
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Could not submit your review.'));
+    } finally {
+      setActionId(null);
     }
   };
 
@@ -238,6 +258,53 @@ export default function StudentDashboard() {
                         <div className="flex gap-2">
                           <Button size="sm" disabled={actionId === item._id} onClick={() => handleStatus(item._id, 'accepted')}>Accept</Button>
                           <Button variant="outline" size="sm" disabled={actionId === item._id} onClick={() => handleStatus(item._id, 'rejected')}>Decline</Button>
+                        </div>
+                      )}
+                      {item.status === 'accepted' && item.tutor?._id && (
+                        <div className="mt-4">
+                          {ratingFor === item.tutor._id ? (
+                            <form onSubmit={(event) => handleReview(event, item.tutor._id)} className="rounded-lg bg-sand p-4">
+                              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-muted">Your rating</label>
+                              <div className="flex gap-2">
+                                {[1, 2, 3, 4, 5].map((value) => (
+                                  <button
+                                    key={value}
+                                    type="button"
+                                    onClick={() => setRatingValue(value)}
+                                    className={`h-8 w-8 rounded-lg border text-sm transition ${
+                                      value <= ratingValue
+                                        ? 'border-teal bg-teal text-white'
+                                        : 'border-line bg-white text-muted'
+                                    }`}
+                                  >
+                                    {value}
+                                  </button>
+                                ))}
+                              </div>
+                              <textarea
+                                rows="2"
+                                placeholder="How did it go? (optional)"
+                                value={ratingComment}
+                                onChange={(event) => setRatingComment(event.target.value)}
+                                className="mt-3 w-full resize-none rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:border-teal"
+                              />
+                              <div className="mt-3 flex gap-2">
+                                <Button type="submit" size="sm" disabled={actionId === item.tutor._id}>Submit review</Button>
+                                <Button variant="ghost" size="sm" type="button" onClick={() => setRatingFor(null)}>Cancel</Button>
+                              </div>
+                            </form>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setRatingFor(item.tutor._id);
+                                setRatingValue(5);
+                              }}
+                              className="text-xs font-semibold text-teal hover:underline"
+                            >
+                              Rate this tutor →
+                            </button>
+                          )}
                         </div>
                       )}
                     </div>
