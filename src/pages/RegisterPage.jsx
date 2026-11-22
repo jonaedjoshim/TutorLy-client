@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Alert, Button, Input } from '../components/ui';
+import { Alert, Button, Input, PasswordInput } from '../components/ui';
 import AuthLayout from '../components/layout/AuthLayout';
 import { useAuth } from '../context/AuthContext';
 import { getErrorMessage } from '../api/client';
@@ -83,10 +83,9 @@ export default function RegisterPage() {
           <Input label="Phone" name="phone" placeholder="01XXXXXXXXX" value={form.phone} onChange={handleChange} />
           <Input label="Area" name="location" placeholder="Dhanmondi, Dhaka" value={form.location} onChange={handleChange} />
         </div>
-        <Input
+        <PasswordInput
           label="Password"
           name="password"
-          type="password"
           placeholder="At least 8 characters"
           value={form.password}
           onChange={handleChange}

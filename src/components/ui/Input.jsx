@@ -1,4 +1,4 @@
-export default function Input({ label, error, hint, id, className = '', ...props }) {
+export default function Input({ label, error, hint, id, className = '', trailing, ...props }) {
   const inputId = id || props.name;
 
   return (
@@ -8,13 +8,18 @@ export default function Input({ label, error, hint, id, className = '', ...props
           {label}
         </label>
       )}
-      <input
-        id={inputId}
-        className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-teal focus:ring-2 focus:ring-teal/15 ${
-          error ? 'border-red-300' : 'border-line'
-        }`}
-        {...props}
-      />
+      <div className="relative">
+        <input
+          id={inputId}
+          className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-teal focus:ring-2 focus:ring-teal/15 ${
+            trailing ? 'pr-16' : ''
+          } ${error ? 'border-red-300' : 'border-line'}`}
+          {...props}
+        />
+        {trailing && (
+          <div className="absolute inset-y-0 right-0 flex items-center pr-2">{trailing}</div>
+        )}
+      </div>
       {error ? (
         <p className="mt-1.5 text-xs text-red-600">{error}</p>
       ) : hint ? (

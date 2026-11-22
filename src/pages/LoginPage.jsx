@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Alert, Button, Input } from '../components/ui';
+import { Alert, Button, Input, PasswordInput } from '../components/ui';
 import AuthLayout from '../components/layout/AuthLayout';
 import { useAuth } from '../context/AuthContext';
 import { getErrorMessage } from '../api/client';
@@ -59,10 +59,9 @@ export default function LoginPage() {
           onChange={handleChange}
           required
         />
-        <Input
+        <PasswordInput
           label="Password"
           name="password"
-          type="password"
           autoComplete="current-password"
           placeholder="At least 8 characters"
           value={form.password}
