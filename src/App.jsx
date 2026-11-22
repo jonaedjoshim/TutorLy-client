@@ -6,6 +6,8 @@ import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import TutorsPage from './pages/TutorsPage';
+import TutorProfilePage from './pages/TutorProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function PublicLayout() {
@@ -27,6 +29,8 @@ export default function App() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/how-it-works" element={<HomePage />} />
+          <Route path="/tutors" element={<TutorsPage />} />
+          <Route path="/tutors/:id" element={<TutorProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
