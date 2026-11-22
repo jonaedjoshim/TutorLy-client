@@ -15,7 +15,7 @@ export default function TutorCard({ tutor }) {
   return (
     <Link
       to={`/tutors/${tutor._id}`}
-      className="group block rounded-card border border-line bg-white p-5 shadow-card transition hover:-translate-y-0.5 hover:border-teal/50"
+      className="group block overflow-hidden rounded-card border border-line bg-white p-5 shadow-card transition hover:-translate-y-0.5 hover:border-teal/50"
     >
       <div className="flex items-start gap-4">
         <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-teal-light text-sm font-bold text-teal-dark">
@@ -23,11 +23,11 @@ export default function TutorCard({ tutor }) {
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
-            <div>
+            <div className="min-w-0">
               <h3 className="truncate text-lg text-ink group-hover:text-teal">{name}</h3>
               <p className="mt-0.5 truncate text-xs text-muted">{tutor.headline || tutor.qualification || 'Tutor'}</p>
             </div>
-            {tutor.verified && <Badge tone="teal">Verified</Badge>}
+            {tutor.verified && <Badge tone="teal" className="shrink-0">Verified</Badge>}
           </div>
 
           <div className="mt-4 flex flex-wrap gap-1.5">

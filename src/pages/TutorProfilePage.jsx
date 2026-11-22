@@ -74,7 +74,7 @@ export default function TutorProfilePage() {
             <div className="grid h-16 w-16 place-items-center rounded-2xl bg-teal-light text-lg font-bold text-teal-dark">
               {name.split(' ').slice(0, 2).map((part) => part[0]).join('').toUpperCase()}
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-4xl text-ink">{name}</h1>
                 {profile.verified && <Badge tone="teal">Verified</Badge>}

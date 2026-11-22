@@ -67,9 +67,9 @@ export default function TuitionNeedsPage() {
         ) : (
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
-              <article key={post._id} className="rounded-card border border-line bg-white p-6 shadow-card">
+              <article key={post._id} className="overflow-hidden rounded-card border border-line bg-white p-6 shadow-card">
                 <div className="flex items-start justify-between gap-3">
-                  <div>
+                  <div className="min-w-0">
                     <h2 className="text-xl text-ink">{post.subject}</h2>
                     <p className="mt-1 text-xs text-muted">{post.classLevel} · {post.area}</p>
                   </div>
