@@ -260,10 +260,15 @@ export default function StudentDashboard() {
                           <Button variant="outline" size="sm" disabled={actionId === item._id} onClick={() => handleStatus(item._id, 'rejected')}>Decline</Button>
                         </div>
                       )}
-                      {item.status === 'accepted' && item.tutor?._id && (
+                      {item.status === 'accepted' && (typeof item.tutor === 'string' ? item.tutor : item.tutor?._id) && (
                         <div className="mt-4">
-                          {ratingFor === item.tutor._id ? (
-                            <form onSubmit={(event) => handleReview(event, item.tutor._id)} className="rounded-lg bg-sand p-4">
+                          {ratingFor === (typeof item.tutor === 'string' ? item.tutor : item.tutor._id) ? (
+                            <form
+                              onSubmit={(event) =>
+                                handleReview(event, typeof item.tutor === 'string' ? item.tutor : item.tutor._id)
+                              }
+                              className="rounded-lg bg-sand p-4"
+                            >
                               <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-muted">Your rating</label>
                               <div className="flex gap-2">
                                 {[1, 2, 3, 4, 5].map((value) => (
@@ -297,7 +302,7 @@ export default function StudentDashboard() {
                             <button
                               type="button"
                               onClick={() => {
-                                setRatingFor(item.tutor._id);
+                                setRatingFor(typeof item.tutor === 'string' ? item.tutor : item.tutor._id);
                                 setRatingValue(5);
                               }}
                               className="text-xs font-semibold text-teal hover:underline"
