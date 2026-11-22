@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { Alert, Badge, Button, Skeleton } from '../components/ui';
 import { postAPI } from '../api/posts';
+import { applicationAPI } from '../api/applications';
 import { getErrorMessage } from '../api/client';
+import { useAuth } from '../context/AuthContext';
 
 export default function TuitionNeedDetailPage() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -29,6 +35,21 @@ export default function TuitionNeedDetailPage() {
       active = false;
     };
   }, [id]);
+
+  const handleApply = async (event) => {
+    event.preventDefault();
+    setBusy(true);
+
+    try {
+      await applicationAPI.apply({ postId: id, message });
+      toast.success('Application sent. Good luck!');
+      setMessage('');
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Could not send your application.'));
+    } finally {
+      setBusy(false);
+    }
+  };
 
   if (loading) {
     return <main className="mx-auto max-w-4xl px-6 py-12"><Skeleton className="h-72" /></main>;
@@ -81,13 +102,38 @@ export default function TuitionNeedDetailPage() {
           </p>
         </div>
 
-        <div className="mt-9 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-7">
+        <div className="mt-9 border-t border-line pt-7">
           <p className="text-sm text-muted">
             Posted by <strong className="text-ink">{post.student?.name}</strong> · {post.student?.location || 'Area not set'}
           </p>
-          <Link to="/login">
-            <Button>Log in to apply</Button>
-          </Link>
+
+          {user?.role === 'tutor' ? (
+            <form onSubmit={handleApply} className="mt-6 rounded-lg bg-sand p-5">
+              <label htmlFor="apply-message" className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-muted">
+                A short note to the student
+              </label>
+              <textarea
+                id="apply-message"
+                rows="3"
+                placeholder="Tell them how you would approach this tuition…"
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                className="w-full resize-none rounded-lg border border-line bg-white px-4 py-3 text-sm outline-none focus:border-teal"
+              />
+              <Button type="submit" className="mt-4" disabled={busy}>
+                {busy ? 'Sending…' : 'Apply for this tuition'}
+              </Button>
+            </form>
+          ) : user?.role === 'student' ? (
+            <p className="mt-5 text-sm text-muted">
+              This request is open to tutors.{' '}
+              <Link to="/post-tuition" className="font-semibold text-teal hover:underline">Post your own need →</Link>
+            </p>
+          ) : (
+            <Link to="/login" className="mt-6 inline-block">
+              <Button>Log in to apply</Button>
+            </Link>
+          )}
         </div>
       </div>
     </main>
