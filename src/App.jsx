@@ -14,6 +14,7 @@ import TuitionNeedDetailPage from './pages/TuitionNeedDetailPage';
 import PostTuitionPage from './pages/PostTuitionPage';
 import StudentDashboard from './pages/StudentDashboard';
 import TutorDashboard from './pages/TutorDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import NotFoundPage from './pages/NotFoundPage';
 
 function PublicLayout() {
@@ -64,6 +65,14 @@ export default function App() {
           element={
             <ProtectedRoute role="tutor">
               <TutorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminDashboard />
             </ProtectedRoute>
           }
         />
