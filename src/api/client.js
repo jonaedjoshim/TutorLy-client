@@ -22,6 +22,9 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem(TOKEN_KEY);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('tutorly:unauthorized'));
+      }
     }
     return Promise.reject(error);
   }

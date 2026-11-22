@@ -68,6 +68,16 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
+  useEffect(() => {
+    const clearSession = () => {
+      setToken(null);
+      setUser(null);
+    };
+
+    window.addEventListener('tutorly:unauthorized', clearSession);
+    return () => window.removeEventListener('tutorly:unauthorized', clearSession);
+  }, []);
+
   const updateUser = useCallback((changes) => {
     setUser((current) => ({ ...current, ...changes }));
   }, []);
