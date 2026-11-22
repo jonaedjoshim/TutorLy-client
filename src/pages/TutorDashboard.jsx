@@ -32,6 +32,8 @@ export default function TutorDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [docBusy, setDocBusy] = useState(null);
 
   useEffect(() => {
     let activeRequest = true;
@@ -103,6 +105,52 @@ export default function TutorDashboard() {
   };
 
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+
+  const handleUpload = async (event) => {
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
+
+    const formData = new FormData();
+    files.forEach((file) => formData.append('documents', file));
+
+    setUploading(true);
+    try {
+      const response = await tutorAPI.uploadDocuments(formData);
+      setProfile((current) => ({ ...current, documents: response.data.documents }));
+      toast.success('Documents uploaded. Our team will review them.');
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Could not upload those files.'));
+    } finally {
+      setUploading(false);
+      event.target.value = '';
+    }
+  };
+
+  const handleRemoveDocument = async (filename) => {
+    setDocBusy(filename);
+    try {
+      const response = await tutorAPI.removeDocument(filename);
+      setProfile((current) => ({ ...current, documents: response.data.documents }));
+      toast.success('Document removed.');
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Could not remove that document.'));
+    } finally {
+      setDocBusy(null);
+    }
+  };
+
+  const handleDownloadDocument = async (filename) => {
+    setDocBusy(filename);
+    try {
+      await tutorAPI.downloadDocument(filename);
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Could not open that document.'));
+    } finally {
+      setDocBusy(null);
+    }
+  };
+
+  const displayName = (filename) => filename.replace(/^\d+-\d+-/, '');
 
   return (
     <DashboardShell
@@ -263,6 +311,56 @@ export default function TutorDashboard() {
                   {saving ? 'Saving…' : 'Save profile'}
                 </Button>
               </form>
+
+              <div className="mt-10 border-t border-line pt-8">
+                <h3 className="text-xl text-ink">Verification documents</h3>
+                <p className="mt-2 text-sm leading-6 text-muted">
+                  Add a degree certificate, teaching ID, or NID. Only you and our review team can open these files.
+                </p>
+
+                <label className="mt-5 inline-flex cursor-pointer items-center gap-2 rounded-lg border border-teal bg-teal-light px-4 py-2.5 text-sm font-semibold text-teal-dark transition hover:bg-teal-light/70">
+                  <input
+                    type="file"
+                    multiple
+                    accept=".jpg,.jpeg,.png,.webp,.pdf"
+                    onChange={handleUpload}
+                    disabled={uploading}
+                    className="hidden"
+                  />
+                  {uploading ? 'Uploading…' : 'Choose files'}
+                </label>
+                <p className="mt-2 text-[11px] text-muted">JPG, PNG, WEBP or PDF · up to 5 files · 5 MB each</p>
+
+                {(profile?.documents || []).length > 0 ? (
+                  <ul className="mt-5 divide-y divide-line rounded-lg border border-line bg-white">
+                    {profile.documents.map((filename) => (
+                      <li key={filename} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+                        <span className="truncate text-sm text-ink">{displayName(filename)}</span>
+                        <div className="flex items-center gap-4">
+                          <button
+                            type="button"
+                            disabled={docBusy === filename}
+                            onClick={() => handleDownloadDocument(filename)}
+                            className="text-xs font-semibold text-teal hover:underline disabled:opacity-50"
+                          >
+                            Open
+                          </button>
+                          <button
+                            type="button"
+                            disabled={docBusy === filename}
+                            onClick={() => handleRemoveDocument(filename)}
+                            className="text-xs font-semibold text-red-600 hover:underline disabled:opacity-50"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-5 text-sm text-muted">No documents uploaded yet.</p>
+                )}
+              </div>
             </Card>
           )}
         </>
