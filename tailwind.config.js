@@ -21,7 +21,6 @@ export default {
       },
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['"Instrument Serif"', 'Georgia', 'serif'],
       },
       borderRadius: {
         card: '0.9rem',
