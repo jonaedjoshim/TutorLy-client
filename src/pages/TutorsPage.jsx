@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Button, EmptyState, Input, Skeleton } from '../components/ui';
+import { Alert, Button, EmptyState, Input, Select, Skeleton } from '../components/ui';
 import TutorCard from '../components/tutors/TutorCard';
 import { tutorAPI } from '../api/tutors';
 import { getErrorMessage } from '../api/client';
@@ -14,9 +14,6 @@ const initialFilters = {
   verified: '',
   sort: 'newest',
 };
-
-const selectClass =
-  'w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink outline-none focus:border-teal';
 
 export default function TutorsPage() {
   const [filters, setFilters] = useState(initialFilters);
@@ -83,29 +80,35 @@ export default function TutorsPage() {
               <Input label="Subject" name="subject" placeholder="Physics" value={filters.subject} onChange={(e) => update('subject', e.target.value)} />
               <Input label="Area" name="area" placeholder="Dhanmondi" value={filters.area} onChange={(e) => update('area', e.target.value)} />
 
-              <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-muted">Class level</label>
-                <select className={selectClass} value={filters.classLevel} onChange={(e) => update('classLevel', e.target.value)}>
-                  <option value="">Any level</option>
-                  <option value="Class 6-10">Class 6-10</option>
-                  <option value="HSC">HSC</option>
-                  <option value="University">University</option>
-                </select>
-              </div>
+              <Select
+                label="Class level"
+                name="classLevel"
+                className="w-full"
+                value={filters.classLevel}
+                onChange={(e) => update('classLevel', e.target.value)}
+              >
+                <option value="">Any level</option>
+                <option value="Class 6-10">Class 6-10</option>
+                <option value="HSC">HSC</option>
+                <option value="University">University</option>
+              </Select>
 
               <div className="grid grid-cols-2 gap-3">
                 <Input label="Min ৳" name="minRate" type="number" placeholder="0" value={filters.minRate} onChange={(e) => update('minRate', e.target.value)} />
                 <Input label="Max ৳" name="maxRate" type="number" placeholder="Any" value={filters.maxRate} onChange={(e) => update('maxRate', e.target.value)} />
               </div>
 
-              <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-muted">Availability</label>
-                <select className={selectClass} value={filters.online} onChange={(e) => update('online', e.target.value)}>
-                  <option value="">Any format</option>
-                  <option value="true">Online only</option>
-                  <option value="false">In person</option>
-                </select>
-              </div>
+              <Select
+                label="Availability"
+                name="online"
+                className="w-full"
+                value={filters.online}
+                onChange={(e) => update('online', e.target.value)}
+              >
+                <option value="">Any format</option>
+                <option value="true">Online only</option>
+                <option value="false">In person</option>
+              </Select>
 
               <label className="flex items-center gap-2.5 text-sm text-ink">
                 <input
@@ -125,8 +128,10 @@ export default function TutorsPage() {
             <p className="text-sm text-muted">
               <strong className="text-ink">{pagination.total}</strong> tutor{pagination.total === 1 ? '' : 's'} found
             </p>
-            <select
-              className={`${selectClass} w-auto`}
+            <Select
+              name="sort"
+              aria-label="Sort tutors"
+              className="w-auto min-w-[180px]"
               value={filters.sort}
               onChange={(e) => update('sort', e.target.value)}
             >
@@ -135,7 +140,7 @@ export default function TutorsPage() {
               <option value="experience">Most experienced</option>
               <option value="rate_asc">Lowest rate</option>
               <option value="rate_desc">Highest rate</option>
-            </select>
+            </Select>
           </div>
 
           {error && <Alert tone="error" className="mb-5">{error}</Alert>}

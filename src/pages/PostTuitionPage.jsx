@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Alert, Button, Input } from '../components/ui';
+import { Alert, Button, Input, Select } from '../components/ui';
 import { postAPI } from '../api/posts';
 import { getErrorMessage } from '../api/client';
 
@@ -19,9 +19,6 @@ const initial = {
   tutorGender: 'any',
   description: '',
 };
-
-const selectClass =
-  'w-full rounded-lg border border-line bg-white px-4 py-3 text-sm text-ink outline-none focus:border-teal';
 
 export default function PostTuitionPage() {
   const navigate = useNavigate();
@@ -82,18 +79,24 @@ export default function PostTuitionPage() {
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2">
-            <div>
-              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-muted">Medium</label>
-              <select className={selectClass} value={form.medium} onChange={(e) => update('medium', e.target.value)}>
-                {mediums.map((medium) => <option key={medium}>{medium}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-muted">Days per week</label>
-              <select className={selectClass} value={form.daysPerWeek} onChange={(e) => update('daysPerWeek', e.target.value)}>
-                {[1, 2, 3, 4, 5, 6].map((count) => <option key={count} value={count}>{count} day{count > 1 ? 's' : ''}</option>)}
-              </select>
-            </div>
+            <Select
+              label="Medium"
+              name="medium"
+              className="w-full"
+              value={form.medium}
+              onChange={(e) => update('medium', e.target.value)}
+            >
+              {mediums.map((medium) => <option key={medium}>{medium}</option>)}
+            </Select>
+            <Select
+              label="Days per week"
+              name="daysPerWeek"
+              className="w-full"
+              value={form.daysPerWeek}
+              onChange={(e) => update('daysPerWeek', e.target.value)}
+            >
+              {[1, 2, 3, 4, 5, 6].map((count) => <option key={count} value={count}>{count} day{count > 1 ? 's' : ''}</option>)}
+            </Select>
           </div>
 
           <div>
