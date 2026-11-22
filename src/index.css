@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink antialiased;
+    font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+  }
+
+  ::selection {
+    background: #d9e7e2;
+    color: #0a4e43;
+  }
+}
+
+@layer utilities {
+  .paper-grid {
+    background-image: radial-gradient(rgba(15, 107, 91, 0.1) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .rule-tight {
+    letter-spacing: -0.04em;
+  }
+}
