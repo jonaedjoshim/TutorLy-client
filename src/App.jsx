@@ -12,6 +12,7 @@ import TutorProfilePage from './pages/TutorProfilePage';
 import TuitionNeedsPage from './pages/TuitionNeedsPage';
 import TuitionNeedDetailPage from './pages/TuitionNeedDetailPage';
 import PostTuitionPage from './pages/PostTuitionPage';
+import StudentDashboard from './pages/StudentDashboard';
 import NotFoundPage from './pages/NotFoundPage';
 
 function PublicLayout() {
@@ -49,6 +50,14 @@ export default function App() {
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/student/dashboard"
+          element={
+            <ProtectedRoute role="student">
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
 
       <Toaster
