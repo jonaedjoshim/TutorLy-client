@@ -27,6 +27,7 @@ export default function Navbar() {
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-muted md:flex">
           <Link to="/tutors" className="transition hover:text-teal">Find a tutor</Link>
+          <Link to="/needs" className="transition hover:text-teal">Tuition needs</Link>
           <Link to="/post-tuition" className="transition hover:text-teal">Post a need</Link>
           <Link to="/how-it-works" className="transition hover:text-teal">How it works</Link>
         </nav>

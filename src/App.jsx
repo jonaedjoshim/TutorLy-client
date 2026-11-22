@@ -3,11 +3,15 @@ import { Toaster } from 'react-hot-toast';
 
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import ProtectedRoute from './components/common/ProtectedRoute';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import TutorsPage from './pages/TutorsPage';
 import TutorProfilePage from './pages/TutorProfilePage';
+import TuitionNeedsPage from './pages/TuitionNeedsPage';
+import TuitionNeedDetailPage from './pages/TuitionNeedDetailPage';
+import PostTuitionPage from './pages/PostTuitionPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function PublicLayout() {
@@ -31,6 +35,16 @@ export default function App() {
           <Route path="/how-it-works" element={<HomePage />} />
           <Route path="/tutors" element={<TutorsPage />} />
           <Route path="/tutors/:id" element={<TutorProfilePage />} />
+          <Route path="/needs" element={<TuitionNeedsPage />} />
+          <Route path="/needs/:id" element={<TuitionNeedDetailPage />} />
+          <Route
+            path="/post-tuition"
+            element={
+              <ProtectedRoute role="student">
+                <PostTuitionPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
