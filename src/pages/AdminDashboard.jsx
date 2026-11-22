@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import DashboardShell from '../components/layout/DashboardShell';
 import { Alert, Badge, Button, Card, EmptyState, Skeleton } from '../components/ui';
 import { adminAPI } from '../api/admin';
+import { tutorAPI } from '../api/tutors';
 import { getErrorMessage } from '../api/client';
 
 const nav = [
@@ -199,6 +200,27 @@ export default function AdminDashboard() {
                       <p className="mt-1 text-xs text-muted">
                         {tutor.headline || 'No headline'} · {tutor.area || 'Area not set'} · {tutor.experience || 0} yrs
                       </p>
+                      {(tutor.documents || []).length > 0 && (
+                        <div className="mt-3 flex flex-wrap gap-3">
+                          {tutor.documents.map((filename) => (
+                            <button
+                              key={filename}
+                              type="button"
+                              disabled={actionId === filename}
+                              onClick={() => {
+                                setActionId(filename);
+                                tutorAPI
+                                  .downloadDocument(filename)
+                                  .catch((err) => toast.error(getErrorMessage(err, 'Could not open that document.')))
+                                  .finally(() => setActionId(null));
+                              }}
+                              className="text-xs font-semibold text-teal hover:underline disabled:opacity-50"
+                            >
+                              View {filename.replace(/^\d+-\d+-/, '')} ↗
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <Button
                       variant={tutor.verified ? 'outline' : 'primary'}

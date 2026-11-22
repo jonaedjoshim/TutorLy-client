@@ -74,6 +74,7 @@ export default function Navbar() {
         <div className="border-t border-line bg-white px-6 py-5 md:hidden">
           <div className="mx-auto flex max-w-6xl flex-col gap-4">
             <Link to="/tutors" className="text-sm font-semibold text-ink" onClick={() => setOpen(false)}>Find a tutor</Link>
+            <Link to="/needs" className="text-sm font-semibold text-ink" onClick={() => setOpen(false)}>Tuition needs</Link>
             <Link to="/post-tuition" className="text-sm font-semibold text-ink" onClick={() => setOpen(false)}>Post a need</Link>
             {user ? (
               <>
