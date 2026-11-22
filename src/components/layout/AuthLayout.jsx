@@ -25,7 +25,7 @@ export default function AuthLayout({ eyebrow, title, description, children }) {
           </div>
         </div>
 
-        <p className="relative text-xs text-white/40">Trusted by families in 86 neighbourhoods.</p>
+        <p className="relative text-xs text-white/40">Built for students and tutors in Bangladesh.</p>
       </aside>
 
       <main className="flex min-h-screen flex-col px-6 py-10 sm:px-12 lg:min-h-0 lg:justify-center lg:px-20">
